@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+*{
+   font-family: 'Poppins', sans-serif;
+}
+
+body{
+   margin: 0px;
+   padding: 0px;
+   min-height: 100vh;
+   display: flex;
+   flex-wrap: wrap;
+   flex-direction: column;
+   align-items: center;
+   background-image: url('../img/register-banner.jpg');
+   background-size: 100vh;
+   background-repeat: no-repeat;
+   background-position: 120%;
+   position: relative;
+}
+
+.header{
+   align-self: end;
+   margin-top: 20px;
+   display: flex;
+   justify-content: center;
+   margin-right: 20px;
+   margin-bottom: 40px;
+}
+
+.header a{
+   text-decoration: none;
+   margin-right: 20px;
+   color: black;
+}
+
+.login{
+   padding: 5px 15px;
+   margin-left: 10px;
+   height: 30px;
+   background-color:#1A285A;
+   color: white;
+   border: none;
+   border-radius: 30px;
+   font-size: 16px;
+   transform: translateY(-30%);
+   transition-duration: 600ms;
+   cursor: pointer;
+   outline: none;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.form-container{
+   background-color: #1A285A;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   width: 60%;
+   border-radius: 10px;
+   margin: 0px 50px;
+   padding: 0px;
+   border: none;
+}
+
+form{
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   column-gap: 30px;
+   row-gap: 20px;
+   width: 85%;
+}
+
+.form-container h1{
+   color: white;
+   font-size: 44px;
+}
+
+.button{
+   display: block;
+   width: 100px;
+   height:40px;
+   background-color: #4277FF;
+   color:white;
+   outline: none;
+   border: none;
+   border-radius: 5px;
+   font-size: 15px;
+   margin: 30px auto 30px auto;
+}
+
+.form-field{
+   width: 100%;
+}
+
+.form-field[data-error] input{
+   border-color: #c92432;
+   color: #c92432;
+   background: #fffafa;
+}
+
+.form-field[data-error]::after{
+   content: attr(data-error);
+   color: #fa3e4d;
+   font-size: 12px;
+   text-align: center;
+}
+
+.lable{
+   color: white;
+}
+
+.form-input{
+   width: 100%;
+   height: 30px;
+   border-radius: 5px;
+   margin-top: 5px;
+   border: 1px solid #878787;
+   padding-left: 5px;
+}
+
+#special{
+   transform: translateY(15px);
+}
+
+#address{
+   height: 100px;
+   padding-top: 5px;
+   resize: none;
+}
+
+#terms{
+   width: 15px;
+   height: 15px;
+}
+
+.note{
+   font-size: 14px;
+   margin-left: 5px;
+   color: white;
+   text-align: center;
+}
+
+.note a{
+   color: aqua;
+}
+
+.form-input:focus{
+   outline: none;
+}
+
+.bottom{
+   margin-top: 50px;
+   margin-bottom: 20px;
+   width: 100%;
+   text-align: center;
+}
+
+.bottom a{
+   color: red;
+}
+
+@media(max-width:1300px){
+   .form-container{
+      background-color: rgba(26, 40, 90, 0.9);
+   }
+}
+
+@media(max-width:950px){
+
+   body{
+      height: auto;
+   }
+
+   .special-field{
+      width: 100%;
+   }
+
+   .form-container{
+      margin-bottom: 50px;
+   }
+
+   .form-container h1{
+      text-align: center;
+   }
+
+   form{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+   }
+
+   .bottom{
+      position: relative;
+   }
+}

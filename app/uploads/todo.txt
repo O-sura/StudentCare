@@ -1,0 +1,15 @@
+==== ALL =====
+- Single-Post View, Forgot Password View
+- Forgot Password/Reset Password - Almost Done
+- Remember me - Almost Done
+- Access Restriction - Partially Done
+- Check Logics
+==== STUDENT =====
+- Community
+- Video Call/Counselling Requests
+- Messaging 
+==== ADMIN =====
+- Counselling Registration Requests
+- Report Generation
+- Chart Analytics
+- Complains Section

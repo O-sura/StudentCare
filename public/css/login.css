@@ -1,0 +1,156 @@
+/* .item*3{Item $}
+Use align-items for positioning in verticle axis
+Use justify-content for positioning in horizontal axis
+use align-self for changing the position of just one 
+
+align-items works on main axis
+justify-content works on cross axis
+
+we use order property to change the order it gets rendered without changing the html itself
+
+flex-basis - Gives the intial width
+flex-grow - the growth rate from it's initial size
+
+Instead of these 2, we can simply use flex */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+
+body{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Poppins', sans-serif;
+}
+
+#sitename{
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+    font-size: 30px;
+    margin: 0px;
+    padding: auto;
+    color: #1A285A;
+    padding-left: 20px;
+}
+
+.flex-container{
+    display:flex;
+    justify-content: center;
+}
+
+.login-banner{
+    flex: 3.5;
+    height: 800px;
+    min-width: 600px;
+}
+
+.login-form{
+    flex: 3;
+    width: 100%;
+    height: 800px;
+    display: flex;
+    align-items: center;
+}
+
+.form-container{
+    display: flex;
+    flex-direction: column;
+    height: 70%;
+    background-color: #1A285A;
+    color: white;
+    width: 80%;
+    border-radius: 5%;
+    padding: 20px;
+    position: relative;
+}
+
+.login-form h1{
+    font-size: 60px;
+    color: white;
+    font-weight: 700;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+.form-field{
+    margin: 50px 20px 20px 20px;
+}
+
+.form-field[data-error] input{
+    border-color: #c92432;
+    color: #c92432;
+    background: #fffafa;
+ }
+ 
+ .form-field[data-error]::after{
+    content: attr(data-error);
+    color: #fa3e4d;
+    font-size: 12px;
+    text-align: center;
+ }
+
+.form-input-lable{
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-input{
+    width: 100%;
+    height:30px;
+    border-radius: 5px;
+    margin: 0px auto 0px auto;
+    font-family: 'Poppins', sans-serif;
+}
+
+.button{
+    display: block;
+    width: 100px;
+    height:40px;
+    background-color: #4277FF;
+    color:white;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    margin: 30px auto 50px auto;
+}
+
+a{
+    color: #00E3E3;
+    text-decoration: none;
+}
+
+.additionals{
+    display: flex;
+    justify-content:space-between;
+    margin: 0px 20px 0px 20px;
+}
+
+.bottom-section{
+    display: flex;
+    justify-content: center;
+    align-items:center;
+}
+
+
+
+@media(max-width:1050px){
+    .flex-container{
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+    }
+
+    .login-banner{
+        height: auto;
+        width: 100%;
+        z-index: -2;
+        opacity: 0.8;
+    }
+
+    .login-form{
+        flex-direction: column;
+        align-items: center;
+        z-index: 100;
+        position:absolute;
+        top: 50%;
+    }
+}
