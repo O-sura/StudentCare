@@ -722,7 +722,7 @@
                     $resetLink = 'Please click this button to Reset Your Password: <a href=http://localhost/StudentCare/users/forgot_password?token='.$token.'>Reset Password</a>' ;
                     $altbody = 'Use the URL http://localhost/StudentCare/users/forgot_password?token='.$token.' to reset the password. Copy and paste the given link in the browser.';
                     sendMail($email,'Change Password',$resetLink,$altbody); // Replace this with your own function to send an email with a reset link.
-                    echo 'A password reset link has been sent to your email.';
+                    $this->loadView('reset-mail');
                 }
              }
              //When the user clicks the reset link
@@ -744,7 +744,7 @@
                             'token' => $token
                         ];
 
-                        $this->loadView('reset-password', $data);
+                        $this->loadView('new-password', $data);
                     }
                 }
             }
@@ -755,15 +755,17 @@
                 $userInfo = $this->userModel->getUserInfo($email); 
                 $this->userModel->updatePassword($userInfo->username, $_POST['password']);
 
-                Session::init();
-                Session::set('userrole', $userInfo->user_role);
-                Session::set('userID', $userInfo->userID);
-                Session::set('username', $userInfo->username);
-                Middleware::redirect(Session::get('userrole') . '/home');
+                $this->loadView('reset-success');
+
+                // Session::init();
+                // Session::set('userrole', $userInfo->user_role);
+                // Session::set('userID', $userInfo->userID);
+                // Session::set('username', $userInfo->username);
+                // Middleware::redirect(Session::get('userrole') . '/home');
             }
              else{
                 $data = [];
-                $this->loadView('forgot_password',$data);
+                $this->loadView('password-reset',$data);
              }
  
         }

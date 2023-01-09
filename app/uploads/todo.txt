@@ -1,5 +1,5 @@
 ==== ALL =====
-- Single-Post View, Forgot Password View
+- Add the new UI's to the views and cofigure them
 - Forgot Password/Reset Password - Almost Done
 - Remember me - Almost Done
 - Access Restriction - Partially Done
