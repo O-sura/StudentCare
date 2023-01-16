@@ -61,8 +61,12 @@
                 //If no errors are set then log in the user
                 if(empty($data['username_err']) && empty($data['password_err'])){
                     if(!$this->userModel->isVerified($data['username'])){
-                        //If the user is not verified then he/she should be redirected to unauth page
-                        Middleware::redirect('access/verify');
+                        //If the user is not verified then he/she should be redirected to verification page
+                        $userInfo = $this->userModel->getUserInfo($data['username']);
+                        $_SESSION['info']['username'] = $userInfo->username;
+                        $_SESSION['info']['email'] = $userInfo->email;
+                        Middleware::setFormLevel(4);
+                        Middleware::redirect('users/verify');
                     }
                     else{
                         $userInfo = $this->userModel->getUserInfo($data['username']);
@@ -114,6 +118,7 @@
         public function register(){
             //Check whether the user is already logged in
             Middleware::isLoggedIn();
+            Middleware::setFormLevel(1);
             if(isset($_POST['continue'])){
                 
                 //Start the session
@@ -271,15 +276,9 @@
                     if(in_array('continue', $keys)){
                         unset($_SESSION['info']['continue']);
                     }
-
-    
-                    // echo "<pre>";
-                    // if(!empty($_SESSION)){
-                    //     print_r($_SESSION['info']);
-                    // }
-                    // echo "</pre>";
                     
                     //load the view for pick the user role
+                    Middleware::setFormLevel(2);
                     Middleware::redirect('users/pick_userrole');
                 }
                 else{
@@ -318,7 +317,7 @@
         public function pick_userrole(){
             //Check whether the user is already logged in
             Middleware::isLoggedIn();
-
+            Middleware::checkFormLevel(2);
             if(isset($_POST['role'])){
 
                 //Start the session
@@ -335,6 +334,7 @@
                     $role = 'facility_provider';
                 }
                 $_SESSION['info']['role'] = $role;
+                    Middleware::setFormLevel(3);
                     Middleware::redirect( 'users/' . $role . '_register');
             }else{
                 $this->loadView('userrole-pick');
@@ -344,7 +344,7 @@
         public function student_register(){
             //Check whether the user is already logged in
             Middleware::isLoggedIn();
-
+            Middleware::checkFormLevel(3);
             if(isset($_POST['register'])){
 
                  //Start the session
@@ -418,9 +418,11 @@
 
                     
                     //$this->loadView('test', $_SESSION['info']);
-                    if($this->userModel->register($_SESSION['info']))
+                    if($this->userModel->register($_SESSION['info'])){
                         //$this->loadView('test', 'Successfully registered as a student');
+                        Middleware::setFormLevel(4);
                         Middleware::redirect('users/verify');
+                    }
                     else
                         $this->loadView('test', 'Something Went wrong!');
                 }
@@ -448,7 +450,7 @@
         public function facility_provider_register(){
             //Check whether the user is already logged in
             Middleware::isLoggedIn();
-
+            Middleware::checkFormLevel(3);
             if(isset($_POST['register'])){
 
                 //Start the session
@@ -479,9 +481,11 @@
                     //Continue and register as a facolity-provider
                     $_SESSION['info']['category'] = $category;
                    
-                    if($this->userModel->register($_SESSION['info']))
+                    if($this->userModel->register($_SESSION['info'])){
                         //$this->loadView('test', 'Successfully registered as a Facility Provider');
+                        Middleware::setFormLevel(4);
                         Middleware::redirect('users/verify');
+                    }
                     else
                         $this->loadView('test', 'Something Went wrong!');
 
@@ -507,7 +511,7 @@
         public function counsellor_register(){
             //Check whether the user is already logged in
             Middleware::isLoggedIn();
-
+            Middleware::checkFormLevel(3);
             if(isset($_POST['register'])){
 
                 //Start the session
@@ -620,9 +624,11 @@
                     //$this->loadView('test', $_SESSION['info']);
                     //$this->userModel->register_student();
 
-                    if($this->userModel->register($_SESSION['info']))
+                    if($this->userModel->register($_SESSION['info'])){
                         //$this->loadView('test', 'Successfully registered as a counsellor');
+                        Middleware::setFormLevel(4);
                         Middleware::redirect('users/verify');
+                    }
                     else
                         $this->loadView('test', 'Something Went wrong!');
                 }
@@ -652,15 +658,23 @@
         public function verify(){
             //Check whether the user is already logged in
             Middleware::isLoggedIn();
-            
             Session::init();
-            
-            $data = [
-                'email' => $_SESSION['info']['email'],
-                'username' => $_SESSION['info']['username']
-            ];
+            if($_SERVER['REQUEST_METHOD'] == 'POST' &&  isset($_POST['email'])){
+                $user = $this->userModel->getUserInfo($_POST['email']);
+                $data = [
+                    'email' => $_POST['email'],
+                    'username' => $user->username
+                ];
+            }
+            else{
+                Middleware::checkFormLevel(4);
+                $data = [
+                    'email' => $_SESSION['info']['email'],
+                    'username' => $_SESSION['info']['username']
+                ];
+            }
 
-            Session::destroy();
+            
 
             if(isset($_GET['code'])){
                     $verification_code = $_GET['code'];
@@ -669,13 +683,16 @@
                   
                     if($result == true){
                         //Verification success
-                        echo "Your account is verified";
+                        Session::destroy();
+                        FlashMessage::flash('verification-success', 'Your Account is Now Verified!', 'success');
                         Middleware::redirect('users/login');
                     }
-                    else
+                    else{
                         //Redirect to error page 
-                        echo "Verification Failed";
-
+                        //echo "Verification Failed";
+                        FlashMessage::flash('verification-failed', 'Verification Failed!', 'error');
+                        Middleware::redirect('access/index');
+                    }
                     
             }
             else{
@@ -690,7 +707,8 @@
                 if($res){
                     $this->loadView('email-verify', $data);
                 }else{
-                    echo 'Looks like something went wrong! Try again later';
+                    FlashMessage::flash('verification-failed', 'Unable to send the Verification Mail! Try Later.', 'warning');
+                    Middleware::redirect('access/index');
                 }
                 
             }
@@ -702,7 +720,7 @@
              //Check whether the user is already logged in
              Middleware::isLoggedIn();
 
-             if(isset($_POST['submit'])){
+             if(isset($_POST['email'])){
  
                 //Start the session
                 Session::init();
@@ -711,7 +729,8 @@
                 $user = $this->userModel->findUserByEmail($email); // Replace this with your own function to retrieve a user from the database by email.
                 if (!$user) {
                     // If the email is not associated with a user, display an error message.
-                    echo 'We could not find an account with that email address.';
+                    FlashMessage::flash('mail-not-found', 'We could not find an account with that email address.', 'error');
+                    Middleware::redirect('users/forgot_password');
                 } else {
                     // If the email is associated with a user, generate a unique token and store it in your database, along with the user's email and a timestamp indicating when the token was created.
                     $token = uniqid(); 
@@ -722,7 +741,8 @@
                     $resetLink = 'Please click this button to Reset Your Password: <a href=http://localhost/StudentCare/users/forgot_password?token='.$token.'>Reset Password</a>' ;
                     $altbody = 'Use the URL http://localhost/StudentCare/users/forgot_password?token='.$token.' to reset the password. Copy and paste the given link in the browser.';
                     sendMail($email,'Change Password',$resetLink,$altbody); // Replace this with your own function to send an email with a reset link.
-                    $this->loadView('reset-mail');
+                    $this->loadView('reset-mail', $email); 
+                    
                 }
              }
              //When the user clicks the reset link
@@ -731,12 +751,14 @@
                 $email = $this->userModel->findEmailByToken($token); // Replace this with your own function to retrieve the email associated with the token from the database.
                 if (!$email) {
                     // If the token is not valid, display an error message.
-                    echo 'Invalid token.';
+                    FlashMessage::flash('invalid-token', 'Invalid Token', 'error');
+                    Middleware::redirect('users/forgot_password');
                 } else {
                     //If token is valid check whether it is expired or not
                     $tokenValid = $this->userModel->isTokenValid($token);
                     if(!$tokenValid){
-                        echo 'Your reset link has expired. Please request a new one.';
+                        FlashMessage::flash('invalid-token', 'Token Expired!', 'warning');
+                        Middleware::redirect('users/forgot_password');
                     }
                     else{
                         // If the token is valid, display a form that allows the user to enter a new password.
@@ -773,9 +795,9 @@
         public function index(){
 
             $data = [
-                'username' => 'Osura'
+                'username' => 'TestUser'
             ];
-
+            FlashMessage::flash('test-flash','This is a test flash','success');
             $this->loadView('test',$data);
         }
     

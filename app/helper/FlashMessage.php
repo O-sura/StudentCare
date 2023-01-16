@@ -2,12 +2,7 @@
 
 const FLASH = 'FLASH_MESSAGES';
 
-const FLASH_ERROR = 'error';
-const FLASH_WARNING = 'warning';
-const FLASH_INFO = 'info';
-const FLASH_SUCCESS = 'success';
-session_start();
-
+Session::init();
 class FlashMessage{
 
         // Create a flash message which accepts parameters name,message,type

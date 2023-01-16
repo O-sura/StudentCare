@@ -1,9 +1,14 @@
 ==== ALL =====
-- Add the new UI's to the views and cofigure them
 - Forgot Password/Reset Password - Almost Done
 - Remember me - Almost Done
 - Access Restriction - Partially Done
 - Check Logics
+- Uni mail only for students
+- Break user controller into multiple controllers
+- Make sub folders for each view and stuff
+- Modify the session to set an array inside a session
+- Mail resend functionality
+- Flash Messages
 ==== STUDENT =====
 - Community
 - Video Call/Counselling Requests

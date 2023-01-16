@@ -2,7 +2,14 @@
 
     class Access extends Controller{
         public function index(){
+            //Not allowed to access(Not allowed user)
+            $data = [
+                'err_code' => 404,
+                'display_data' => 'Oops. Looks like Something went Wrong'
+            ];
 
+            $this->loadView('unauth', $data);
+            die();
         }
 
         public function restrict(){
@@ -31,6 +38,8 @@
             
             $this->loadView('unauth', $data);
         }
+
+
     }
 
 ?>

@@ -5,12 +5,12 @@ class Session {
 
     //starts session
     public static function init() {
-        session_start();
-
-        //OVERLOAD TEST
-        Session::set("curr_time", time());
+        if(session_status() !== PHP_SESSION_ACTIVE || session_status() === PHP_SESSION_NONE) {
+                session_start();
+                //OVERLOAD TEST
+                Session::set("curr_time", time());
+        }
     }
-
     //sets values
     public static function set($key, $value) {
         $_SESSION[$key] = $value;
@@ -20,6 +20,8 @@ class Session {
     public static function get($key) {
         if(isset($_SESSION[$key]))
             return $_SESSION[$key];
+        else
+            return null;
     }
 
     public static function destroy() {
@@ -28,7 +30,8 @@ class Session {
 
     //remove value from array
     public static function unset($key) {
-        unset($_SESSION[$key]);
+        if(isset($_SESSION[$key]))
+            unset($_SESSION[$key]);
     }
 
     public static function isLoggedIn(){

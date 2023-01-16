@@ -2,20 +2,6 @@
 
 class Middleware{
 
-    // public function checkCookie($remember_token){
-    //     $userModel = $this->loadModel('User');
-    //     $cookieFound = $userModel->checkCookie($remember_token);
-    //     if($cookieFound != null){
-    //             Session::set('userrole', $cookieFound->user_role);
-    //             Session::set('userID', $cookieFound->userID);
-    //             Session::set('username', $cookieFound->username);
-    //             Middleware::redirect(Session::get('userrole') . '/home');
-    //             exit();
-    //     }else{
-    //         return;
-    //    }
-    // }
-
     public static function redirect($page){
         header('location:' . URLROOT . '/' . $page);
     }
@@ -43,4 +29,19 @@ class Middleware{
             exit();
         }
     }
+
+    //Method to set the current form level 
+    public static function setFormLevel($currentLevel){
+        Session::unset('currentLevel');
+        Session::set('currentLevel', $currentLevel);
+    }
+
+    //Method to check whether the current form level is allowed
+    public static function checkFormLevel($allowedLevel){
+        if(Session::get('currentLevel') < $allowedLevel || Session::get('currentLevel') == null){
+            Middleware::redirect('users/register');
+            exit();
+        }
+    }
+
 }

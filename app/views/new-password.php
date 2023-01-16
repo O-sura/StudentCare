@@ -29,8 +29,8 @@
             <input type="submit" value="Reset Password" name="reset-password">
         </form> 
         <div class="back-btn">
-            <a href="#"><i class="fa-solid fa-arrow-left"></i></a>
-            <span class="btn-text"><a href="#">Go Back to login</a></span>
+            <a href=<?php echo URLROOT . "/users/login"?>><i class="fa-solid fa-arrow-left"></i></a>
+            <span class="btn-text"><a href=<?php echo URLROOT . "/users/login"?>>Go Back to login</a></span>
         </div>
     </div>
 </body>
