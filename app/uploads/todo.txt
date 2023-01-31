@@ -7,10 +7,16 @@
 - Break user controller into multiple controllers
 - Make sub folders for each view and stuff
 - Modify the session to set an array inside a session
-- Mail resend functionality
-- Flash Messages
 ==== STUDENT =====
 - Community
+    post validation on submitting
+    single post view
+    comments
+    votes
+    filters
+    search
+    update/delete posts
+    
 - Video Call/Counselling Requests
 - Messaging 
 ==== ADMIN =====

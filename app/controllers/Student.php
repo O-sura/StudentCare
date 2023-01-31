@@ -10,8 +10,11 @@
         }
 
         public function home(){
-            $usr =   Session::get('username');
-            echo $usr;
+            $data = [
+                'username' => Session::get('username')
+            ];
+
+            $this->loadView('community/dashboard', $data);
         }
 
     }
