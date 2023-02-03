@@ -59,7 +59,8 @@ use function PHPSTORM_META\type;
             <div class="parent">
                     <div class="icon-text-button">
                         <button class="icon-btn" id="up"><i class="fa-solid fa-up-long"></i></button>
-                        <p id="vote-count"><?= $post->votes ?></p>
+                        <p id="<?= "vote-count-" . $post->post_id ?>"><?= $post->votes ?></p>
+                        <p id="post-id" hidden><?= $post->post_id ?></p>
                         <button class="icon-btn" id="down"><i class="fa-solid fa-down-long"></i></button>
                     </div>
                     <div class="div1">

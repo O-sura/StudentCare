@@ -128,7 +128,36 @@
                 echo $res;
             }
         }
-        
+
+
+        public function check_vote(){
+            if(isset($_POST['post_id'])){
+                $_POST['post_id'] = trim($_POST['post_id']);
+                $currUser = Session::get('userID');
+                $res = $this->CommunityModel->checkIfVoted($currUser, $_POST['post_id']);
+                if($res > 0){
+                    //Entry already exists so can't upvote
+                    http_response_code(400);
+                    
+                }else{
+                    //Not voted before, allow to upvote
+                    http_response_code(200);
+                }
+            }
+        }
+
+        //Controller function to add the vote to the post accordingly
+        public function vote(){
+            $currUser = Session::get('userID');
+            if(isset($_POST['post_id']) && isset($_POST['flag'])){
+                $_POST['post_id'] = trim($_POST['post_id']);
+                $res =  $this->CommunityModel->addVote($currUser, $_POST['post_id'],1);
+            }else{
+                $_POST['post_id'] = trim($_POST['post_id']);
+                $res =  $this->CommunityModel->addVote($currUser, $_POST['post_id'],0);
+            }
+            echo $res;
+        }
     }
 
 ?>

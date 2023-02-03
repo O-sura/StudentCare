@@ -1,6 +1,6 @@
 import { CommunityPost } from "./post.js";
 
-//JS code for handling votes
+//Calling the voting functionality providing function
 votingCountHandler();
 
 //JS code navigate into add new post page
@@ -30,6 +30,7 @@ options.forEach(option => {
     })
 })
 
+//Function to filter the community posts based on the dropdown value
 function dropdownFilter(option){
     //Your Posts,All Posts,Saved
     // Send an AJAX request to the server with the search query
@@ -61,6 +62,7 @@ function dropdownFilter(option){
     xhr.send();
 }
 
+//Clear all the posts currently showing to the user
 function clearposts(){
     let posts = document.querySelectorAll('.parent');
     if(posts != null){
@@ -170,7 +172,7 @@ latestIcon.forEach(icon => {
     })
 })
 
-//Get all the buttons
+//Function to provide ipvote and downvote functionality
 function votingCountHandler(){
     var votingButtons = document.querySelectorAll(".icon-text-button");
 
@@ -179,21 +181,49 @@ function votingCountHandler(){
         var upButton = votingButton.querySelector(".icon-btn#up");
         var downButton = votingButton.querySelector(".icon-btn#down");
 
+        // Get the vote count element, current vote count, increase and update
+        let votedPostId = parseInt(votingButton.querySelector("p#post-id").textContent);
         // Add event listeners to the buttons
         upButton.addEventListener("click", function() {
-            // Get the vote count element, current vote count, increase and update
-            var voteCount = votingButton.querySelector("p#vote-count");
-            var count = parseInt(voteCount.textContent);
-            count++;
-            voteCount.textContent = count;
+            vote(votedPostId,true);
         });
 
         downButton.addEventListener("click", function() {
-            var voteCount = votingButton.querySelector("p#vote-count");
-            var count = parseInt(voteCount.textContent);
-            count--;
-            voteCount.textContent = count;
+            vote(votedPostId,false);
         });
     });
 
 }
+
+//Function for voting community posts
+function vote(postId, action){
+        // Encode parameters as query string(action=true means it is for upvote)
+        let params = (action)? "post_id=" + postId + "&flag=1" : "post_id=" + postId;
+
+        // Send an AJAX request to the server to check if the user has already voted
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost/StudentCare/community/check_vote/", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            // If the user has not voted, send another AJAX request to upvote
+            var xhr2 = new XMLHttpRequest();
+            xhr2.open("POST", "http://localhost/StudentCare/community/vote/", true);
+            xhr2.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr2.onload = function() {
+              if (xhr2.status === 200) {
+                // Update the votes count on the fontend page
+                let voteCount = document.getElementById("vote-count-"+ postId);
+                voteCount.innerText = JSON.parse(xhr2.responseText).votes;
+              }
+            };
+            xhr2.send(params);
+          } else {
+            // If the user has already voted, display an error message
+            alert("You have already voted on this post.");
+          }
+        };
+        xhr.send(params);
+}
+
+  

@@ -98,4 +98,31 @@ class CommunityModel{
         $comments = $this->db->getAllRes();
         return $comments;
     }
+
+    public function checkIfVoted($userID, $postID){
+        $this->db->query('SELECT * FROM post_voted WHERE post_id = :postID AND userID = :userID');
+        $this->db->bind(':postID', $postID);
+        $this->db->bind(':userID', $userID);
+        return $this->db->rowCount();
+    }
+
+    public function addVote($userID, $postID,$flag){
+        $this->db->query('INSERT INTO post_voted VALUES(:postID, :userID)');
+        $this->db->bind(':postID', $postID);
+        $this->db->bind(':userID', $userID);
+        $this->db->execute();
+
+        if($flag == 1){//It is an upvote request
+            $this->db->query('UPDATE posts SET votes = votes + 1 WHERE post_id = :postID');
+        }else{//It is an downvote request
+            $this->db->query('UPDATE posts SET votes = votes - 1 WHERE post_id = :postID');
+        }
+        $this->db->bind(':postID', $postID);
+        $this->db->execute();
+
+        $this->db->query('SELECT votes FROM posts WHERE post_id = :id');
+        $this->db->bind(':id', $postID);
+        $votes = $this->db->getRes();
+        return json_encode($votes);
+    }
 }

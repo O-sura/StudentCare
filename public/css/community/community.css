@@ -96,7 +96,7 @@ body{
     cursor: pointer;
 }
 
-#vote-count{
+[id^="vote-count"]{
     margin: 0px 5px;
 }
 
