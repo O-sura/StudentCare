@@ -57,11 +57,11 @@ export class CommunityPost{
             <div class="options">
                 <a href="./view_post/${this.postID}"><input type="button" value="Read More" class="button"></a>
                 <div class="bottom">
-                    <div class="option">
+                    <div class="option" id="save-button">
                         <i class="fa-regular fa-bookmark"></i>
                         <span>Save</span>
                     </div>
-                    <div class="option">
+                    <div class="option" id="report-button">
                         <i class="fa-solid fa-flag"></i>
                         <span>Report</span>
                     </div>

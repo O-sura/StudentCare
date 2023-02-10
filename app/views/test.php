@@ -14,6 +14,7 @@
 </head>
 <body>
     <h1>Test Page</h1>
+    <?php echo $data['author']->author ?>
 </body>
 </html>
 

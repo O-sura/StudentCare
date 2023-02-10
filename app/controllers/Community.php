@@ -8,7 +8,14 @@
         }
 
         public function index(){
-            echo 'This is the index page';
+            //echo 'This is the index page';
+            $author = $this->CommunityModel->test();
+
+            $data = [
+                'author' => $author
+            ];
+
+            $this->loadView('test', $data);
         }
 
         public function home(){
@@ -117,7 +124,7 @@
                 $_GET['author'] = trim($_GET['author']);
                 //If the saved filter is set
                if($_GET['filter'] == 'Saved'){
-                    $res =  $this->CommunityModel->getSavedPosts($_GET['author']);
+                    $res =  $this->CommunityModel->getSavedPosts(Session::get('userID'));
                }
                else if($_GET['filter'] == 'Your Posts'){
                     $res =  $this->CommunityModel->getPostsByUser($_GET['author']);
@@ -157,6 +164,24 @@
                 $res =  $this->CommunityModel->addVote($currUser, $_POST['post_id'],0);
             }
             echo $res;
+        }
+
+        public function save_post(){
+            if(isset($_POST['post_id'])){
+                $_POST['post_id'] = trim($_POST['post_id']);
+                $currUser = Session::get('userID');
+                $res = $this->CommunityModel->checkIfSaved($currUser, $_POST['post_id']);
+                if($res > 0){
+                    //Entry already exists, unsave that post
+                    $this->CommunityModel->savePost($currUser, $_POST['post_id'],-1);
+                    $status = "Unsaved";
+                }else{
+                    //Not saved, then add to saved list
+                   $this->CommunityModel->savePost($currUser, $_POST['post_id'],1);
+                   $status = "Saved";
+                }
+                echo $status;
+            }
         }
     }
 

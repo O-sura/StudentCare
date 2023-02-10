@@ -57,6 +57,7 @@ function dropdownFilter(option){
             }
             resultList.innerHTML = postList;
             votingCountHandler();
+            savedPostHandler();
         }
     };
     xhr.send();
@@ -224,6 +225,37 @@ function vote(postId, action){
           }
         };
         xhr.send(params);
+}
+
+//Save Post Functionality
+function savedPostHandler(){
+    let savePostBtn = document.querySelectorAll('#save-button');
+    savePostBtn.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Send an AJAX request to the server to check if the user has already voted
+            let parentDiv = btn.parentElement.parentElement.parentElement.parentElement;
+            let votedPostId = parseInt(parentDiv.querySelector("p#post-id").textContent);
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost/StudentCare/community/save_post/", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+            if (xhr.status === 200) {
+                if(xhr.responseText == "Saved"){
+                    alert('Post added to the Saved List');
+                }
+                if(xhr.responseText == "Unsaved"){
+                    //Refresh the saved posts list and load
+                    dropdownFilter("Saved");
+                    alert('Post Successfully Unsaved');
+                }
+            } else {
+                // If something went wrong, notify users about them
+                alert("Something went wrong when saving the post. Try again later.");
+            }
+            };
+            xhr.send("post_id=" + votedPostId);
+        })
+    })
 }
 
   

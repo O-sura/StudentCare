@@ -78,9 +78,9 @@ class CommunityModel{
         return json_encode($posts);
     }
 
-    public function getSavedPosts($author){
-        $this->db->query('SELECT * FROM saved_post WHERE post_author = :author');
-        $this->db->bind(':author', $author);
+    public function getSavedPosts($userID){
+        $this->db->query('SELECT * FROM posts WHERE post_id IN (SELECT post_id FROM saved_post WHERE userID = :user_id)');
+        $this->db->bind(':user_id', $userID);
         $posts = $this->db->getAllRes();
         return json_encode($posts);
     }
@@ -106,6 +106,13 @@ class CommunityModel{
         return $this->db->rowCount();
     }
 
+    public function checkIfSaved($userID, $postID){
+        $this->db->query('SELECT * FROM saved_post WHERE post_id = :postID AND userID = :userID');
+        $this->db->bind(':postID', $postID);
+        $this->db->bind(':userID', $userID);
+        return $this->db->rowCount();
+    }
+
     public function addVote($userID, $postID,$flag){
         $this->db->query('INSERT INTO post_voted VALUES(:postID, :userID)');
         $this->db->bind(':postID', $postID);
@@ -124,5 +131,32 @@ class CommunityModel{
         $this->db->bind(':id', $postID);
         $votes = $this->db->getRes();
         return json_encode($votes);
+    }
+
+    public function savePost($userID, $postID,$flag){
+        if($flag == 1){//It is an save post request
+            $this->db->query('SELECT author FROM posts WHERE post_id = :postID');
+            $this->db->bind(':postID', $postID);
+            $author = $this->db->getRes();
+
+            $this->db->query('INSERT INTO saved_post VALUES(:postID, :userID, :author)');
+            $this->db->bind(':postID', $postID);
+            $this->db->bind(':userID', $userID);
+            $this->db->bind(':author', $author->author);
+            $this->db->execute();
+
+        }
+        if($flag == -1){//It is unsave post request
+            $this->db->query('DELETE FROM saved_post WHERE userID = :userID AND post_id = :postID');
+            $this->db->bind(':postID', $postID);
+            $this->db->bind(':userID', $userID);
+            $this->db->execute();
+        }
+    }
+
+    public function test(){
+        $this->db->query('SELECT author FROM posts WHERE post_id = :postID');
+            $this->db->bind(':postID', 21);
+            return $this->db->getRes();
     }
 }
